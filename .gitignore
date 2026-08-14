@@ -73,3 +73,6 @@ server/.agent/
 # Temporary screenshots / assets
 t16-editor-heat.png
 /cache/
+
+# Trellis: 个人 AI 会话记录（含开发者身份，每次会话变更，不进入版本控制）
+.trellis/workspace/
