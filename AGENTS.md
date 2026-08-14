@@ -34,6 +34,8 @@ GitHub Issue 承载需求与 TODO，task walkthrough 记录重大任务，独立
 - Agent 到报告验证结果和 PR 链接为止，不自行合并 PR、关闭 issue、部署或做其他收尾。合并需要用户明确许可。
 - 获得许可后，先确认 CI、typecheck 和相关聚焦测试通过，再执行 squash merge、同步主工作区、移除 worktree 和本地分支。任一步失败时从断点继续，不重复已完成步骤。
 - 任何 worktree 或 Agent 更新远端 `master` 后，主工作区立即 `git fetch && git merge --ff-only origin/master`。不 force push `master`。
+- 提交与推送前先判断上游是否更新：`git fetch origin`（推送目标是 fork 时再 `git fetch fork`），用 `git rev-list --count HEAD..origin/master` 检查，大于 0 即有新提交；有更新先同步再提交/推送。同步只做安全操作：工作区干净时 `git merge --ff-only origin/master`；无法 fast-forward（本地已分叉）时停下报告并询问，不自动 merge/rebase，不 force push。
+- 推送时的检查与同步由 `.githooks/pre-push` 机械强制（启用：`git config core.hooksPath .githooks`）：可安全 fast-forward 时自动同步并中止本次推送提示重推；本地与上游分叉或工作区脏时中止并给指引；`git push --no-verify` 可绕过。
 - Windows worktree 清理遇到长路径时，先启用 `core.longpaths`；目录残留时使用 PowerShell/robocopy 在已确认的目标目录内清理。
 
 ### Agent 创建 Issue

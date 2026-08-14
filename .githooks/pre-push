@@ -1,0 +1,69 @@
+#!/bin/sh
+# pre-push: 推送前检查上游是否更新；可安全 fast-forward 时自动同步，否则中止推送。
+# 启用：git config core.hooksPath .githooks
+# 设计：只做安全同步（ff-only、工作区干净）；上游与本地已分叉时绝不自动合并/force push，
+#       中止并给出指引，由人决策。需要 `git push --no-verify` 才能绕过。
+
+set -u
+
+remote="${1:-}"
+[ -n "$remote" ] || exit 0
+
+# 静默刷新远端引用；网络失败时降级为仅本地检查，不阻断推送
+git fetch --quiet origin 2>/dev/null || true
+if [ "$remote" != "origin" ]; then
+    git fetch --quiet "$remote" 2>/dev/null || true
+fi
+
+abort() {
+    echo "pre-push: $1" >&2
+    echo "pre-push: 已中止本次推送。请先同步上游再推送；不会自动合并分叉或 force push。" >&2
+    exit 1
+}
+
+# $1 = 本地提交（local_sha），$2 = 远端跟踪引用，$3 = 人类可读名称
+# 返回值：0 = 无需同步或已同步（此时应中止本次推送，让用户重推）；1 = 中止推送
+sync_or_abort() {
+    local_sha="$1"; ref="$2"; name="$3"
+    ahead=$(git rev-list --count "$local_sha..$ref" 2>/dev/null) || return 0
+    [ "${ahead:-0}" -gt 0 ] || return 0
+
+    behind=$(git rev-list --count "$ref..$local_sha" 2>/dev/null)
+    if [ "${behind:-0}" -gt 0 ]; then
+        echo "pre-push: 上游 ${name} 有 ${ahead} 个新提交，且本地已有 ${behind} 个它没有的提交（已分叉）。" >&2
+        echo "pre-push: 无法自动同步，请手动处理：git fetch && git merge ${name}（或 git rebase ${name}），确认后再推送。" >&2
+        exit 1
+    fi
+
+    # 本地严格落后上游 → 可安全 fast-forward 同步
+    if ! git diff --quiet || ! git diff --cached --quiet; then
+        abort "上游 ${name} 有 ${ahead} 个新提交，但工作区有未提交改动；请先 commit 或 stash 再推送"
+    fi
+    echo "pre-push: 上游 ${name} 有 ${ahead} 个新提交，自动 fast-forward 同步…"
+    git merge --ff-only "$ref" >/dev/null 2>&1 || abort "自动同步 ${name} 失败；请手动 git fetch && git merge --ff-only ${name}"
+    echo "pre-push: 已同步 ${name} 到 $(git rev-parse --short HEAD)。"
+    echo "pre-push: 为避免用同步前的旧提交推送，本次已中止；请重新执行 push（此时应无新提交，直接成功）。" >&2
+    exit 1
+}
+
+synced_ref=""
+while read local_ref local_sha remote_ref remote_sha; do
+    [ -n "$local_ref" ] || continue
+    case "$local_ref" in refs/heads/*) ;; *) continue ;; esac
+    branch="${local_ref#refs/heads/}"
+    case "$local_sha" in 0*) continue ;; esac   # 删除推送跳过
+
+    # 1) 规范上游 origin/master：仅在推送 master 时自动同步
+    if [ "$branch" = "master" ] && git rev-parse --verify -q refs/remotes/origin/master >/dev/null; then
+        synced_ref="refs/remotes/origin/master"
+        sync_or_abort "$local_sha" "$synced_ref" origin/master
+    fi
+
+    # 2) 推送目标远端跟踪引用：防止对远端已领先/分叉的分支做 non-fast-forward 推送
+    track="refs/remotes/$remote/$branch"
+    if [ "$track" != "$synced_ref" ] && git rev-parse --verify -q "$track" >/dev/null; then
+        sync_or_abort "$local_sha" "$track" "$remote/$branch"
+    fi
+done
+
+exit 0
