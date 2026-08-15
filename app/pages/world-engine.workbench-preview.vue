@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {computed, onMounted, ref, shallowRef, watch} from "vue";
+import Tooltip from "nbook/app/components/common/Tooltip.vue";
 import {storeToRefs} from "pinia";
 import {useIdeTheme} from "nbook/app/composables/useIdeTheme";
 import {useNovelIdeStore} from "nbook/app/stores/novel-ide";
@@ -821,37 +822,38 @@ onMounted(() => {
                     {{ localDraftLabel }}
                 </span>
                 <span class="hidden rounded-md border border-[var(--we-border)] bg-[var(--we-bg-muted)] px-2 py-1 text-[11px] text-[var(--we-text-muted)] lg:inline">{{ notice }}</span>
-                <button
-                    v-if="totalDraftSliceCount"
-                    type="button"
-                    data-testid="world-workbench-draft-summary"
-                    class="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--we-warning-border)] bg-[var(--we-warning-soft)] px-2.5 text-[12px] font-medium text-[var(--we-warning)] transition-colors hover:bg-[var(--we-bg-hover)]"
-                    :title="draftSummaryTitle"
-                    @click="showAllDraftSlices"
-                >
-                    <span class="i-lucide-list-todo h-3.5 w-3.5"></span>
-                    {{ t("worldEngine.workbenchPreview.drafts") }}
-                    <span class="rounded bg-[var(--we-bg-panel)] px-1.5 font-mono text-[10px]">{{ totalDraftSliceCount }}</span>
-                    <span v-if="metadataDraftSliceCount" class="hidden rounded border border-[var(--we-warning-border)] bg-[var(--we-bg-panel)] px-1.5 py-0.5 font-mono text-[10px] md:inline">meta {{ metadataDraftSliceCount }}</span>
-                    <span v-if="valueDraftSliceCount" class="hidden rounded border border-[var(--we-warning-border)] bg-[var(--we-bg-panel)] px-1.5 py-0.5 font-mono text-[10px] md:inline">value {{ valueDraftSliceCount }}</span>
-                </button>
+                <Tooltip v-if="totalDraftSliceCount" :text="draftSummaryTitle" placement="bottom">
+                    <button
+                        type="button"
+                        data-testid="world-workbench-draft-summary"
+                        class="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--we-warning-border)] bg-[var(--we-warning-soft)] px-2.5 text-[12px] font-medium text-[var(--we-warning)] transition-colors hover:bg-[var(--we-bg-hover)]"
+                        @click="showAllDraftSlices"
+                    >
+                        <span class="i-lucide-list-todo h-3.5 w-3.5"></span>
+                        {{ t("worldEngine.workbenchPreview.drafts") }}
+                        <span class="rounded bg-[var(--we-bg-panel)] px-1.5 font-mono text-[10px]">{{ totalDraftSliceCount }}</span>
+                        <span v-if="metadataDraftSliceCount" class="hidden rounded border border-[var(--we-warning-border)] bg-[var(--we-bg-panel)] px-1.5 py-0.5 font-mono text-[10px] md:inline">meta {{ metadataDraftSliceCount }}</span>
+                        <span v-if="valueDraftSliceCount" class="hidden rounded border border-[var(--we-warning-border)] bg-[var(--we-bg-panel)] px-1.5 py-0.5 font-mono text-[10px] md:inline">value {{ valueDraftSliceCount }}</span>
+                    </button>
+                </Tooltip>
                 <button type="button" class="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--we-border)] bg-[var(--we-bg-panel)] px-3 text-[12px] text-[var(--we-text-secondary)] transition-colors hover:bg-[var(--we-bg-hover)] hover:text-[var(--we-text-main)]" @click="resetMockData">
                     <span class="i-lucide-refresh-cw h-3.5 w-3.5"></span>
                     重置 mock
                 </button>
-                <button
-                    type="button"
-                    data-testid="world-workbench-inspector-toggle"
-                    class="inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12px] transition-colors"
-                    :class="inspectorButtonAttentionClass"
-                    :title="inspectorButtonTitle"
-                    @click="toggleInspectorPanel"
-                >
-                    <span :class="inspectorVisible ? 'i-lucide-panel-right-close' : 'i-lucide-panel-right-open'" class="h-3.5 w-3.5"></span>
-                    {{ t("worldEngine.workbenchPreview.inspector") }}
-                    <span v-if="metadataDraftSliceCount" class="rounded border border-[var(--we-warning-border)] bg-[var(--we-warning-soft)] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[var(--we-warning)]">meta {{ metadataDraftSliceCount }}</span>
-                    <span v-if="selectedSliceSubjectFileProposalCount" data-testid="world-workbench-inspector-proposal-count" class="rounded bg-[var(--we-bg-panel)] px-1.5 font-mono text-[10px]">{{ selectedSliceSubjectFileProposalCount }}</span>
-                </button>
+                <Tooltip :text="inspectorButtonTitle" placement="bottom">
+                    <button
+                        type="button"
+                        data-testid="world-workbench-inspector-toggle"
+                        class="inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12px] transition-colors"
+                        :class="inspectorButtonAttentionClass"
+                        @click="toggleInspectorPanel"
+                    >
+                        <span :class="inspectorVisible ? 'i-lucide-panel-right-close' : 'i-lucide-panel-right-open'" class="h-3.5 w-3.5"></span>
+                        {{ t("worldEngine.workbenchPreview.inspector") }}
+                        <span v-if="metadataDraftSliceCount" class="rounded border border-[var(--we-warning-border)] bg-[var(--we-warning-soft)] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[var(--we-warning)]">meta {{ metadataDraftSliceCount }}</span>
+                        <span v-if="selectedSliceSubjectFileProposalCount" data-testid="world-workbench-inspector-proposal-count" class="rounded bg-[var(--we-bg-panel)] px-1.5 font-mono text-[10px]">{{ selectedSliceSubjectFileProposalCount }}</span>
+                    </button>
+                </Tooltip>
             </div>
         </header>
 
@@ -966,9 +968,11 @@ onMounted(() => {
                 />
             </Transition>
             <aside v-if="selectedSlice && !inspectorVisible" data-testid="world-inspector-restore-rail" class="flex w-10 shrink-0 flex-col items-center border-l border-[var(--we-border)] bg-[var(--we-bg-panel)] py-2">
-                <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--we-text-muted)] transition-colors hover:bg-[var(--we-bg-hover)] hover:text-[var(--we-text-main)]" :title="selectedSliceSubjectFileProposalCount ? '展开检查器并定位主体文件建议' : '展开检查器'" @click="toggleInspectorPanel">
-                    <span class="i-lucide-panel-right-open h-4 w-4"></span>
-                </button>
+                <Tooltip :text="selectedSliceSubjectFileProposalCount ? '展开检查器并定位主体文件建议' : '展开检查器'" placement="left">
+                    <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--we-text-muted)] transition-colors hover:bg-[var(--we-bg-hover)] hover:text-[var(--we-text-main)]" :aria-label="selectedSliceSubjectFileProposalCount ? '展开检查器并定位主体文件建议' : '展开检查器'" @click="toggleInspectorPanel">
+                        <span class="i-lucide-panel-right-open h-4 w-4"></span>
+                    </button>
+                </Tooltip>
                 <span v-if="selectedSliceSubjectFileProposalCount" data-testid="world-inspector-restore-proposal-count" class="mt-2 rounded border border-[var(--we-accent-border)] bg-[var(--we-accent-soft)] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[var(--we-accent-strong)]" title="当前切片有主体文件建议">{{ selectedSliceSubjectFileProposalCount }}</span>
                 <span class="mt-3 [writing-mode:vertical-rl] text-[11px] tracking-[0.16em] text-[var(--we-text-muted)]">{{ t("worldEngine.workbenchPreview.inspector") }}</span>
             </aside>
