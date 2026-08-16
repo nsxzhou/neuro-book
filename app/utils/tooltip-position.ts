@@ -1,4 +1,4 @@
-export type TooltipPlacement = "right" | "bottom";
+export type TooltipPlacement = "right" | "bottom" | "left" | "top";
 
 export type TooltipEffectivePlacement = "right" | "left" | "bottom" | "top";
 
@@ -25,8 +25,10 @@ export const TOOLTIP_VIEWPORT_PADDING = 8;
  * 计算 fixed 定位的 Tooltip 在视口内的坐标。
  *
  * - "right"：默认出现在触发元素右侧并垂直居中；放不下时翻转到左侧。
+ * - "left"：默认出现在触发元素左侧并垂直居中；放不下时翻转到右侧。
  * - "bottom"：默认出现在触发元素下方并水平居中；放不下时翻转到上方。
- * - 两种 placement 都会把最终坐标钳制在视口内（保留 padding）。
+ * - "top"：默认出现在触发元素上方并水平居中；放不下时翻转到下方。
+ * - 四种 placement 都会把最终坐标钳制在视口内（保留 padding）。
  * - 返回值里的 placement 是翻转后的实际朝向，供箭头定位使用。
  */
 export function computeTooltipPosition(
@@ -53,6 +55,40 @@ export function computeTooltipPosition(
             viewportBottom - TOOLTIP_VIEWPORT_PADDING - tooltip.height,
         );
         return {x, y, placement: fitsRight ? "right" : "left"};
+    }
+
+    if (placement === "left") {
+        const preferredX = trigger.left - TOOLTIP_GAP - tooltip.width;
+        const fitsLeft = preferredX >= TOOLTIP_VIEWPORT_PADDING;
+        const x = clamp(
+            fitsLeft ? preferredX : trigger.left + trigger.width + TOOLTIP_GAP,
+            TOOLTIP_VIEWPORT_PADDING,
+            viewportRight - TOOLTIP_VIEWPORT_PADDING - tooltip.width,
+        );
+        const preferredY = trigger.top + (trigger.height - tooltip.height) / 2;
+        const y = clamp(
+            preferredY,
+            TOOLTIP_VIEWPORT_PADDING,
+            viewportBottom - TOOLTIP_VIEWPORT_PADDING - tooltip.height,
+        );
+        return {x, y, placement: fitsLeft ? "left" : "right"};
+    }
+
+    if (placement === "top") {
+        const preferredX = trigger.left + (trigger.width - tooltip.width) / 2;
+        const x = clamp(
+            preferredX,
+            TOOLTIP_VIEWPORT_PADDING,
+            viewportRight - TOOLTIP_VIEWPORT_PADDING - tooltip.width,
+        );
+        const preferredY = trigger.top - TOOLTIP_GAP - tooltip.height;
+        const fitsTop = preferredY >= TOOLTIP_VIEWPORT_PADDING;
+        const y = clamp(
+            fitsTop ? preferredY : trigger.top + trigger.height + TOOLTIP_GAP,
+            TOOLTIP_VIEWPORT_PADDING,
+            viewportBottom - TOOLTIP_VIEWPORT_PADDING - tooltip.height,
+        );
+        return {x, y, placement: fitsTop ? "top" : "bottom"};
     }
 
     const preferredX = trigger.left + (trigger.width - tooltip.width) / 2;

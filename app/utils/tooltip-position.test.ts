@@ -81,4 +81,64 @@ describe("computeTooltipPosition", () => {
         expect(result.x).toBe(TOOLTIP_VIEWPORT_PADDING);
         expect(result.y).toBe(TOOLTIP_VIEWPORT_PADDING);
     });
+
+    it("places a left tooltip to the left of the trigger, vertically centered", () => {
+        const trigger = {left: 300, top: 200, width: 40, height: 40};
+        const tooltip = {left: 0, top: 0, width: 120, height: 28};
+
+        expect(computeTooltipPosition(trigger, tooltip, "left", VIEWPORT)).toEqual({
+            x: trigger.left - TOOLTIP_GAP - tooltip.width,
+            y: 200 + (40 - 28) / 2,
+            placement: "left",
+        });
+    });
+
+    it("flips a left tooltip to the right when it would overflow the left edge", () => {
+        const trigger = {left: 0, top: 200, width: 40, height: 40};
+        const tooltip = {left: 0, top: 0, width: 120, height: 28};
+
+        const result = computeTooltipPosition(trigger, tooltip, "left", VIEWPORT);
+        expect(result.placement).toBe("right");
+        expect(result.x).toBe(trigger.left + trigger.width + TOOLTIP_GAP);
+    });
+
+    it("clamps a left tooltip vertically into the viewport", () => {
+        const tooltip = {left: 0, top: 0, width: 120, height: 28};
+
+        const nearTop = computeTooltipPosition({left: 300, top: 0, width: 40, height: 40}, tooltip, "left", VIEWPORT);
+        expect(nearTop.y).toBe(TOOLTIP_VIEWPORT_PADDING);
+
+        const nearBottom = computeTooltipPosition({left: 300, top: 780, width: 40, height: 40}, tooltip, "left", VIEWPORT);
+        expect(nearBottom.y).toBe(VIEWPORT.height - TOOLTIP_VIEWPORT_PADDING - tooltip.height);
+    });
+
+    it("places a top tooltip above the trigger, horizontally centered", () => {
+        const trigger = {left: 200, top: 200, width: 40, height: 40};
+        const tooltip = {left: 0, top: 0, width: 120, height: 28};
+
+        expect(computeTooltipPosition(trigger, tooltip, "top", VIEWPORT)).toEqual({
+            x: 200 + (40 - 120) / 2,
+            y: trigger.top - TOOLTIP_GAP - tooltip.height,
+            placement: "top",
+        });
+    });
+
+    it("flips a top tooltip below when it would overflow the top edge", () => {
+        const trigger = {left: 200, top: 0, width: 40, height: 40};
+        const tooltip = {left: 0, top: 0, width: 120, height: 28};
+
+        const result = computeTooltipPosition(trigger, tooltip, "top", VIEWPORT);
+        expect(result.placement).toBe("bottom");
+        expect(result.y).toBe(trigger.top + trigger.height + TOOLTIP_GAP);
+    });
+
+    it("clamps a top tooltip horizontally into the viewport", () => {
+        const tooltip = {left: 0, top: 0, width: 120, height: 28};
+
+        const nearLeft = computeTooltipPosition({left: 0, top: 200, width: 40, height: 40}, tooltip, "top", VIEWPORT);
+        expect(nearLeft.x).toBe(TOOLTIP_VIEWPORT_PADDING);
+
+        const nearRight = computeTooltipPosition({left: 1240, top: 200, width: 40, height: 40}, tooltip, "top", VIEWPORT);
+        expect(nearRight.x).toBe(VIEWPORT.width - TOOLTIP_VIEWPORT_PADDING - tooltip.width);
+    });
 });
