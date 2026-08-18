@@ -1,6 +1,6 @@
 ---
 name: trellis-continue
-description: "Resume work on the current task. Loads the workflow Phase Index, figures out which phase/step to pick up at, then pulls the step-level detail via get_context.py --mode phase. Use when coming back to an in-progress task and you need to know what to do next."
+description: "Resume work on the current task at the correct phase."
 ---
 
 # Continue Current Task
@@ -49,7 +49,7 @@ Phase rules (full detail in `.trellis/workflow.md`):
 Once you know which step to resume at:
 
 ```bash
-python3 ./.trellis/scripts/get_context.py --mode phase --step <X.X> --platform reasonix
+python3 ./.trellis/scripts/get_context.py --mode phase --step <X.X> --platform trae
 ```
 
 Follow the loaded instructions. After each `[required]` step completes, move to the next.
