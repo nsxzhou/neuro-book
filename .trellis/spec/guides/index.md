@@ -21,6 +21,7 @@ These guides help you **ask the right questions before coding**.
 
 | Guide | Purpose | When to Use |
 |-------|---------|-------------|
+| [Git & PR Workflow Guide](./git-and-pr-workflow.md) | 默认在 fork master 上开发，按需才建 PR 分支，PR 前必读 CONTRIBUTING.md | 每个任务开始和收尾时（提交/推送/是否建 PR） |
 | [Code Reuse Thinking Guide](./code-reuse-thinking-guide.md) | Identify patterns and reduce duplication | When you notice repeated patterns |
 | [Cross-Layer Thinking Guide](./cross-layer-thinking-guide.md) | Think through data flow across layers | Features spanning multiple layers |
 

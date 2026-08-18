@@ -23,20 +23,20 @@
 
 ## Git 工作流
 
-GitHub Issue 承载需求与 TODO，task walkthrough 记录重大任务，独立 worktree 承载代码，squash PR 合并进 `master`。
+GitHub Issue 承载需求与 TODO，task walkthrough 记录重大任务。开发 Agent 默认在 **fork 的 `master`** 上开发并测试，只有用户显式要求 PR 时才创建主题分支提交 PR（具体见 `.trellis/spec/guides/git-and-pr-workflow.md`，与本文冲突时以该指南为准）。
 
 ### 分支与开发
 
-- 分支格式为 `{type}/{refs}-{slug}`：`type` 使用 `feat`、`fix`、`docs`、`refactor`、`test` 或 `chore`；`refs` 使用 `t<task号>` 或 `i<issue号>`，slug 使用不超过 5 个单词的英文 kebab-case。分支必须能追溯到 issue 或 task，不使用 `codex/*`。
-- 开工前执行 `git fetch origin`，再从 `origin/master` 创建 `.worktree/<slug>` 和对应分支；新 worktree 首次使用前执行 `bun install`。
-- 代码改动在 worktree 中完成。提交前只暂存任务范围内的文件；用户明确要求全部改动时才使用 `git add -A`。
-- 完成后 push 分支并创建 PR；完整覆盖 issue 使用 `Closes #N`，部分覆盖使用 `Refs #N`。
+- **默认主线是 fork 的 `master`**：改动直接在 `master` 上完成、在 `master` 上测试、提交并 `git push fork master`。fork 的 master 领先上游是正常状态，不需要因此自动建分支或提 PR。
+- **按需 PR**：仅当用户明确请求「提 PR / 提交 PR / 建 PR」时才创建主题分支，从 fork 最新 `master` 切出，命名 `{type}/{slug}`（`type` 用 `feat`、`fix`、`docs`、`refactor`、`test` 或 `chore`，slug 用不超过 5 个单词的英文 kebab-case），只服务于这一次 PR；PR 后主工作区回到 fork 的 `master`。
+- **准备 PR 前必读** `CONTRIBUTING.md`（尤其「Pull Request 要求」「Git 与提交」两节）和 `.trellis/spec/guides/git-and-pr-workflow.md`；PR 描述按模板说明范围、验证命令与结果、已知限制、受影响合同；不夹带无关改动；CI 通过不代表会合并。
+- 提交前只暂存任务范围内的文件；用户明确要求全部改动时才使用 `git add -A`。
 - Agent 到报告验证结果和 PR 链接为止，不自行合并 PR、关闭 issue、部署或做其他收尾。合并需要用户明确许可。
-- 获得许可后，先确认 CI、typecheck 和相关聚焦测试通过，再执行 squash merge、同步主工作区、移除 worktree 和本地分支。任一步失败时从断点继续，不重复已完成步骤。
+- 获得合并许可后，先确认 CI、typecheck 和相关聚焦测试通过，再执行 squash merge、同步主工作区、清理 PR 分支。任一步失败时从断点继续，不重复已完成步骤。
 - 任何 worktree 或 Agent 更新远端 `master` 后，主工作区立即 `git fetch && git merge --ff-only origin/master`。不 force push `master`。
 - 提交与推送前先判断上游是否更新：`git fetch origin`（推送目标是 fork 时再 `git fetch fork`），用 `git rev-list --count HEAD..origin/master` 检查，大于 0 即有新提交；有更新先同步再提交/推送。同步只做安全操作：工作区干净时 `git merge --ff-only origin/master`；无法 fast-forward（本地已分叉）时停下报告并询问，不自动 merge/rebase，不 force push。
 - 推送时的检查与同步由 `.githooks/pre-push` 机械强制（启用：`git config core.hooksPath .githooks`）：可安全 fast-forward 时自动同步并中止本次推送提示重推；本地与上游分叉或工作区脏时中止并给指引；`git push --no-verify` 可绕过。
-- Windows worktree 清理遇到长路径时，先启用 `core.longpaths`；目录残留时使用 PowerShell/robocopy 在已确认的目标目录内清理。
+- 仍可能使用 worktree 的场合：为隔离大改动或并行调试时，worktree 同样基于 fork 的 `master` 创建；Windows worktree 清理遇到长路径时，先启用 `core.longpaths`；目录残留时使用 PowerShell/robocopy 在已确认的目标目录内清理。
 
 ### Agent 创建 Issue
 
