@@ -1,3 +1,5 @@
+delete process.env.VSCODE_CWD;
+
 import { defineConfig, presetUno, presetIcons } from "unocss";
 import { icons as lucideIcons } from "@iconify-json/lucide";
 
