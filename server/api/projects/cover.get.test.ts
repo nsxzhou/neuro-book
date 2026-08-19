@@ -114,7 +114,7 @@ describe("GET /api/projects/cover", () => {
         expect(mocks.authorizeProjectCover).toHaveBeenCalledTimes(1);
         expect(mocks.renderVariant).toHaveBeenCalledWith(
             expect.objectContaining({identity: "project-cover:book:cover.png"}),
-            {width: 384, height: 576, fit: "cover", quality: 80},
+            {width: 384, height: 576, fit: "contain", quality: 80},
         );
         expect(headers).toMatchObject({
             etag: '"variant-etag"',

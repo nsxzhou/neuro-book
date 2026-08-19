@@ -9,7 +9,7 @@ describe("parseImageVariantQuery", () => {
 
     it("preset 与显式同规格返回相同规范化结构", () => {
         expect(parseImageVariantQuery({preset: "project-cover"})).toEqual(IMAGE_VARIANT_PRESETS["project-cover"]);
-        expect(parseImageVariantQuery({width: "384", height: "576", fit: "cover", quality: "80"}))
+        expect(parseImageVariantQuery({width: "384", height: "576", fit: "contain", quality: "80"}))
             .toEqual(IMAGE_VARIANT_PRESETS["project-cover"]);
         expect(parseImageVariantQuery({width: "768"})).toEqual(IMAGE_VARIANT_PRESETS["attachment-chat"]);
         expect(parseImageVariantQuery({width: 768, quality: 80})).toEqual(IMAGE_VARIANT_PRESETS["attachment-chat"]);

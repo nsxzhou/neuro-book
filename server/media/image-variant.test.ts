@@ -97,7 +97,7 @@ describe("ImageVariantModule", () => {
         const second = await new ImageVariantModule(absoluteFsPath(root)).render(authorized, {
             width: 384,
             height: 576,
-            fit: "cover",
+            fit: "contain",
             quality: 80,
         });
 

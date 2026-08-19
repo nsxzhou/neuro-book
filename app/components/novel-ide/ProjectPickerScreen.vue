@@ -739,7 +739,7 @@ onBeforeUnmount(() => {
                         <button type="button" class="block w-full text-left focus-visible:outline-none" :aria-label="t('ide.picker.openProject', {title: novel.title})" @click="emit('open', novel.projectRoot)">
                             <!-- 书封：真实图片失败或未配置时回退到排版封面。 -->
                             <span class="project-cover relative block aspect-[2/3] overflow-hidden rounded-[4px] border border-[var(--border-color)] bg-[var(--bg-panel)] transition-transform duration-200 group-hover:-translate-y-1 group-focus-within:-translate-y-1">
-                                <img v-if="novel.cover && !failedCoverRoots.has(novel.projectRoot)" :key="`${novel.projectRoot}:${String(coverRefreshVersions[novel.projectRoot] ?? 0)}`" class="h-full w-full object-cover" :src="projectCoverUrl(novel.projectRoot)" :alt="t('ide.picker.coverAlt', {title: novel.title})" loading="lazy" decoding="async" @error="handleCoverError(novel.projectRoot)">
+                                <img v-if="novel.cover && !failedCoverRoots.has(novel.projectRoot)" :key="`${novel.projectRoot}:${String(coverRefreshVersions[novel.projectRoot] ?? 0)}`" class="h-full w-full object-contain" :src="projectCoverUrl(novel.projectRoot)" :alt="t('ide.picker.coverAlt', {title: novel.title})" loading="lazy" decoding="async" @error="handleCoverError(novel.projectRoot)">
                                 <span v-else class="project-cover-fallback absolute inset-0 flex flex-col items-center justify-between overflow-hidden px-4 py-6 text-center">
                                     <span class="flex w-full items-center gap-2 text-[10px] font-medium text-[var(--text-muted)]">
                                         <span class="h-px flex-1 bg-[var(--border-color)]"></span>
@@ -748,9 +748,9 @@ onBeforeUnmount(() => {
                                     </span>
                                     <span class="line-clamp-4 break-words font-serif text-lg font-bold leading-7 text-[var(--text-main)] sm:text-xl">{{ novel.title }}</span>
                                     <span class="h-1 w-9 bg-[var(--accent-main)]"></span>
+                                    <span class="project-cover-spine absolute inset-y-0 left-0 w-2 border-r border-[var(--border-color)]"></span>
+                                    <span class="project-cover-page absolute inset-y-2 right-0 w-1 border-l border-[var(--border-color)]"></span>
                                 </span>
-                                <span class="project-cover-spine absolute inset-y-0 left-0 w-2 border-r border-[var(--border-color)]"></span>
-                                <span class="project-cover-page absolute inset-y-2 right-0 w-1 border-l border-[var(--border-color)]"></span>
                             </span>
                             <span class="project-shelf-board block h-2" aria-hidden="true"></span>
 
@@ -840,7 +840,7 @@ onBeforeUnmount(() => {
             <div v-if="coverDialogProject" class="space-y-4">
                 <button v-if="coverPreviewUrl || coverDialogProject.cover" type="button" class="mx-auto block w-full max-w-[240px] focus-visible:outline-none" :aria-label="t('ide.imagePreview.openOriginal')" @click="previewCoverOriginal">
                     <span class="relative block aspect-[2/3] overflow-hidden rounded-md border border-[var(--border-color)] bg-[var(--bg-input)] focus-visible:ring-2 focus-visible:ring-[var(--accent-main)]">
-                        <img :src="coverPreviewUrl || projectCoverUrl(coverDialogProject.projectRoot)" :alt="t('ide.picker.coverAlt', {title: coverDialogProject.title})" class="h-full w-full object-cover" decoding="async">
+                        <img :src="coverPreviewUrl || projectCoverUrl(coverDialogProject.projectRoot)" :alt="t('ide.picker.coverAlt', {title: coverDialogProject.title})" class="h-full w-full object-contain" decoding="async">
                         <span class="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-md border border-[var(--border-color)] bg-[var(--bg-panel)] text-[var(--text-main)]">
                             <span class="i-lucide-maximize-2 h-4 w-4"></span>
                         </span>

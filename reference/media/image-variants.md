@@ -39,7 +39,7 @@ HTTP 只接受以下两种互斥形式：
 
 | 名称 | 最终规格 | 消费方 |
 | --- | --- | --- |
-| `project-cover` | 384×576、cover、80 | Project 书架 |
+| `project-cover` | 384×576、contain、80 | Project 书架 |
 | `attachment-grid` | 384×216、contain、80 | Session 附件面板 |
 | `attachment-chat` | width 768、contain、80 | Chat Flow 图片 |
 

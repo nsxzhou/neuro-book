@@ -47,7 +47,7 @@ export class ImageVariantError extends Error {
 }
 
 export const IMAGE_VARIANT_PRESETS = Object.freeze({
-    "project-cover": Object.freeze({width: 384, height: 576, fit: "cover", quality: 80}),
+    "project-cover": Object.freeze({width: 384, height: 576, fit: "contain", quality: 80}),
     "attachment-grid": Object.freeze({width: 384, height: 216, fit: "contain", quality: 80}),
     "attachment-chat": Object.freeze({width: 768, fit: "contain", quality: 80}),
 } satisfies Record<string, ImageVariantSpec>);
