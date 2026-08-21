@@ -353,7 +353,7 @@
     ".trellis/scripts/common/__pycache__/__init__.cpython-311.pyc": "b5eda6f5339f1671e9cff4affd963147c10594e19f34ac3576748a3e59b461b6",
     ".trellis/scripts/common/__pycache__/active_task.cpython-311.pyc": "9cb3f233c0dced0e68abe578506445576b28821537100e3ae4ab7075cbe4d537",
     ".trellis/scripts/common/__pycache__/config.cpython-311.pyc": "f23f00733edcb8e75a941ef67d72b310c972fd7a1470207b419170908d6d4c8b",
-    ".trellis/scripts/common/__pycache__/developer.cpython-311.pyc": "42c3fc085b09333fed0120186727f57b083206558a7f7ad0f3b3eb728a50d111",
+    ".trellis/scripts/common/__pycache__/developer.cpython-311.pyc": "9a55123b021d7734ee61d1a9b933b46abaf6fa6a1eada7a86578fa5a8fb4887a",
     ".trellis/scripts/common/__pycache__/git.cpython-311.pyc": "d84ca465f6ca408d87aec4b5c748d512fb4eaeef40174e686c5c63395df599f4",
     ".trellis/scripts/common/__pycache__/git_context.cpython-311.pyc": "abd81377808c1d07218157c0e72625c67d7e4f09297ff5452dbdb66eca742d32",
     ".trellis/scripts/common/__pycache__/io.cpython-311.pyc": "31084363316f7b4f3162a1e08a24e5eb6e707d4780584af0ec44b457142468bb",
@@ -377,6 +377,17 @@
     ".trellis/.runtime/update-check-ppid-9083.marker": "77c2ca150b61c7330da139378ffd3940d093f1bd74a1294689345d27e15b5124",
     ".opencode/lib/context-visibility.js": "3a0b463db4080eb272c1eb3b9199578bcbd640e00455daecb975657264894f5c",
     ".trellis/.runtime/update-check-ppid-10576.marker": "77c2ca150b61c7330da139378ffd3940d093f1bd74a1294689345d27e15b5124",
-    ".trellis/.runtime/update-check-ppid-20974.marker": "77c2ca150b61c7330da139378ffd3940d093f1bd74a1294689345d27e15b5124"
+    ".trellis/.runtime/update-check-ppid-20974.marker": "77c2ca150b61c7330da139378ffd3940d093f1bd74a1294689345d27e15b5124",
+    ".pi/prompts/trellis-start.md": "28af1eb6645d8b517cf705277d8405370b712926e6b01667d6698564002c6a9d",
+    ".pi/prompts/trellis-continue.md": "12c2f0288ff67af3368c0b577a50027a11a25fec1d32ed34282a4dc84be08f1c",
+    ".pi/prompts/trellis-finish-work.md": "5a8a72fd87d009c15068bae75165af97f1b03e975b24f5dc3b901b01c6914160",
+    ".pi/agents/trellis-check.md": "1dbfedd3403f201fbfdbae8d810afba0a1f812b97f0f8e308908db7eaceea496",
+    ".pi/agents/trellis-implement.md": "9bb1f70d09b7104a671ef9a0ba072b4500d45b8556a253126a003e2b1e7281a2",
+    ".pi/agents/trellis-research.md": "ef77555f4c2c4ade36f1c23a076b6f4bb9d180ff24a2f00d7cdc2f8fd5af0b0a",
+    ".pi/extensions/trellis/index.ts": "f086c24c8601f240cbf22cef0845ede016522bcf74f11aa65e4a7952e238c1c6",
+    ".pi/settings.json": "b68f37c04a7007d2b52d5a87326e3786edbc903bfa518358830dd85727c13d7c",
+    ".trellis/.runtime/update-check-opencode_ses_fdd2ae7f6ffe3AS8NXs9s3TcuD.marker": "77c2ca150b61c7330da139378ffd3940d093f1bd74a1294689345d27e15b5124",
+    ".trellis/.runtime/update-check-opencode_ses_fdd9cf59cffeUOVNDzDML1i1ik.marker": "77c2ca150b61c7330da139378ffd3940d093f1bd74a1294689345d27e15b5124",
+    ".trellis/.runtime/update-check-opencode_ses_fddccab18ffeOT8xMrtSyFP1o4.marker": "77c2ca150b61c7330da139378ffd3940d093f1bd74a1294689345d27e15b5124"
   }
 }
