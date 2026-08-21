@@ -24,6 +24,7 @@ NeuroBook 的写作 skill 分三层。本文件是唯一的全局路线图；各
 | `novel-idea-exploration` | 灵感探索：把模糊灵感收束成长简介式故事概述 |
 | `novel-genre-research` | 题材与竞品调研：novel-api 榜单选题 → 导入对标书 → book-deconstruct 拆书 → 结论落 lorebook |
 | `novel-technique-character-card-workshop` | 重量级角色理解与写卡技法：20/24/80/200 问、调色盘、三面性 |
+| `novel-style-distill` | 文风蒸馏：把 references 参考资料蒸馏成 writer 可选的 styles 文风预设，支持多篇融合 |
 
 **3. 创作流程层** —— 有先后依赖的主线：
 
