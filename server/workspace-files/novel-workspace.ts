@@ -481,7 +481,8 @@ export async function copyNovelDirectoryTemplate(
     projectRoot: AbsoluteFsPath,
     options: NovelDirectoryTemplateOptions = {},
 ): Promise<void> {
-    const userTemplateRoot = userProjectDirectoryTemplateRoot(options.userNbookRoot);
+    const userNbookRoot = options.userNbookRoot ?? userNbookAbsoluteRoot();
+    const userTemplateRoot = userProjectDirectoryTemplateRoot(userNbookRoot);
     const mergedRoot = await fs.mkdtemp(path.join(os.tmpdir(), "nbook-novel-template-"));
     try {
         await fs.cp(projectDirectoryTemplateRoot(), mergedRoot, {
@@ -502,8 +503,40 @@ export async function copyNovelDirectoryTemplate(
             force: false,
             errorOnExist: false,
         });
+        await syncWriterProfileAssetsFromGlobalHome(projectRoot, userNbookRoot);
     } finally {
         await fs.rm(mergedRoot, {recursive: true, force: true});
+    }
+}
+
+const WRITER_ASSET_DIRS = ["styles", "references"] as const;
+
+async function syncWriterProfileAssetsFromGlobalHome(
+    projectRoot: AbsoluteFsPath,
+    userNbookRoot: string,
+): Promise<void> {
+    const globalWriterRoot = path.join(userNbookRoot, "agents", "writer");
+    for (const dirName of WRITER_ASSET_DIRS) {
+        const globalDir = path.join(globalWriterRoot, dirName);
+        if (!(await hasMarkdownFiles(globalDir))) {
+            continue;
+        }
+        const projectDir = path.join(projectRoot, "agents", "writer", dirName);
+        await fs.mkdir(projectDir, {recursive: true});
+        await fs.cp(globalDir, projectDir, {
+            recursive: true,
+            force: false,
+            errorOnExist: false,
+        });
+    }
+}
+
+async function hasMarkdownFiles(directoryPath: string): Promise<boolean> {
+    try {
+        const entries = await fs.readdir(directoryPath);
+        return entries.some((entry) => entry.endsWith(".md"));
+    } catch {
+        return false;
     }
 }
 

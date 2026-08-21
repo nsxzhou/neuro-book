@@ -30,12 +30,19 @@ type WritingReferenceFile = {
 
 /**
  * 从 writer profile 默认 home 资源目录自动发现 Markdown 文风参考正文。
+ * 
+ * 优先级：
+ * 1. 如果全局 Profile Home (workspace/.nbook/agents/writer/references) 存在且有用户编辑的内容 → 只用它
+ * 2. 否则 → 使用系统预设 + 用户覆盖的预设路径
  */
 export async function loadWritingReferencePresets(candidates?: readonly string[]): Promise<WritingReferenceDefinition[]> {
-    const roots = candidates ?? [
-        path.join(assetResolver.systemRoot, "agent", "profiles", "builtin", "writer.home", "references"),
-        path.join(assetResolver.userRoot, "agent", "profiles", "builtin", "writer.home", "references"),
-    ];
+    const globalReferencesRoot = path.join(assetResolver.userRoot, "agents", "writer", "references");
+    const roots = candidates ?? (await hasMarkdownFiles(globalReferencesRoot)
+        ? [globalReferencesRoot]
+        : [
+            path.join(assetResolver.systemRoot, "agent", "profiles", "builtin", "writer.home", "references"),
+            path.join(assetResolver.userRoot, "agent", "profiles", "builtin", "writer.home", "references"),
+        ]);
     const referenceFiles = await listMergedWritingReferenceFiles(roots);
     const references: WritingReferenceDefinition[] = [];
 
@@ -133,4 +140,13 @@ function isMissingPathError(error: unknown): boolean {
         && error !== null
         && "code" in error
         && error.code === "ENOENT";
+}
+
+async function hasMarkdownFiles(directoryPath: string): Promise<boolean> {
+    try {
+        const entries = await fs.readdir(directoryPath);
+        return entries.some((entry) => entry.endsWith(".md"));
+    } catch {
+        return false;
+    }
 }
