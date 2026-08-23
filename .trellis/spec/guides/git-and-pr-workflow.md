@@ -27,6 +27,18 @@
 9. 一个 PR 只解决一个连贯问题，不夹带无关修复、格式化、依赖升级或文档改动。
 10. CI 通过只代表自动检查完成，不代表一定会合并；不要用「CI 过了」代替对 PR 内容的说明。
 
+## 向上游提 PR（区别于 fork 本地按需 PR）
+
+向 `notnotype/neuro-book` 提 PR 时，遵循上游 [`docs/standards/repository-workflow.md`](../../../../docs/standards/repository-workflow.md) 与 `CONTRIBUTING.md`，与 fork 本地开发（fork-master 直开）不同：
+
+- **分支格式必须带引用**：`{type}/{refs}-{slug}`，`refs` 用 `i<issue号>` 或 `t<task号>`（例：`fix/i119-dev-clean-shutdown`）。
+- **基线必须是上游最新 master**：从上游最新 `origin/master` 切分支，不从 fork master 切；fork 已合入但上游没有的改动不要夹带进 PR。
+- **同步自己的分支用 rebase**：上游 master 前进后 rebase 并自行解决冲突，不 force push、不重写他人提交。
+- **PR 前检查 Issue 未被 `status: claimed` 或分配给他人**；完整覆盖用 `Closes #N`，部分覆盖用 `Refs #N`。
+- **范围纪律**：一个 PR 只解决一个连贯问题，不夹带格式化、依赖升级、上游合并（upstream merge）或无关修复；上游可能因方向变化/范围过大/无法验证关闭 PR，**可基于更小、更清晰的范围重新提交**。
+- **上游行为以测试锁定**：上游对行为改动会补测试断言；PR 若与上游新合同方向相反（如删除上游刻意保留的机制），需先与上游对齐，否则 review 大概率失败。
+- **CI 基于旧 base 的绿色不代表可合并**：base 大幅变化（如 monorepo 迁移）后，`mergeable` 会变为 CONFLICTING，必须 rebase 后重跑。
+
 ## 合并上游更新（大迁移级）
 
 fork 与上游长期分叉后合并时，采用以下已验证流程（08-23-merge-upstream-monorepo 实证）：
