@@ -26,3 +26,14 @@
    - 前端改动的截图、录屏或「未做浏览器验证」的明确说明
 9. 一个 PR 只解决一个连贯问题，不夹带无关修复、格式化、依赖升级或文档改动。
 10. CI 通过只代表自动检查完成，不代表一定会合并；不要用「CI 过了」代替对 PR 内容的说明。
+
+## 合并上游更新（大迁移级）
+
+fork 与上游长期分叉后合并时，采用以下已验证流程（08-23-merge-upstream-monorepo 实证）：
+
+- **干跑预演**：`git merge-tree --write-tree --name-only HEAD <upstream-ref>` 先确认冲突集，不落盘、不碰工作区；结果与预期一致再执行 `git merge --no-ff`。
+- **重写型文件必须人工核对**：AGENTS.md / README 等被两边大幅重写的文件，3-way merge 会静默丢失未冲突章节；合并后逐节对照 fork 版本，fork 特有内容（约定、命令、表格）缺失时人工重建。
+- **上游行为变化以测试形式显式化**：上游移除行为时会补测试断言（例如 writer preset 只读 Install Root）；合并后先跑冲突相关测试，失败即上游新合同，与 fork 功能冲突时按「保留 fork 功能、去掉与上游合同互斥的部分」裁决。
+- **验证对照纯上游基线**：临时 worktree checkout 上游提交跑同一检查（governance / typecheck / 聚焦测试），以「与上游一致、fork 新增 0」为口径；上游自身既有失败不阻塞合并，也不在本任务修复。
+- **macOS 测试环境**：`NBOOK_HOST_SYSTEM_TEMP_ROOT` 需指向 realpath（`/var` → `/private/var` 是 symlink，测试根拒绝 symlink）；大小写冲突类测试在大小写不敏感卷上不可跑（模拟 Windows case 语义）。
+- **fork 独有目录天然保留**：`.trellis/`、`.pi/`、`.opencode/`、`.githooks/` 等上游不存在的目录 merge 后完整保留，无需特殊处理；`.agents` 等两边共有的目录需确认改动集合无交集。
