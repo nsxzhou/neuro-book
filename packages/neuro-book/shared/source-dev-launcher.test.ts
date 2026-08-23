@@ -14,9 +14,6 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@notnotype/owned-process", () => ({
     spawnOwnedProcess: mocks.spawnOwnedProcess,
 }));
-vi.mock("nbook/server/runtime/shutdown/product-shutdown-client", () => ({
-    shutdownNativeProduct: mocks.shutdownNativeProduct,
-}));
 
 import {resolveSourceDevUserRoots, runSourceDev} from "../scripts/cli/source-dev";
 

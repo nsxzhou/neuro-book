@@ -33,7 +33,7 @@ type WritingReferenceFile = {
  * 
  * 优先级：
  * 1. 如果全局 Profile Home (workspace/.nbook/agents/writer/references) 存在且有用户编辑的内容 → 只用它
- * 2. 否则 → 使用系统预设 + 用户覆盖的预设路径
+ * 2. 否则 → 使用系统预设路径
  */
 export async function loadWritingReferencePresets(candidates?: readonly string[]): Promise<WritingReferenceDefinition[]> {
     const globalReferencesRoot = path.join(assetResolver.userRoot, "agents", "writer", "references");
@@ -41,7 +41,6 @@ export async function loadWritingReferencePresets(candidates?: readonly string[]
         ? [globalReferencesRoot]
         : [
             path.join(assetResolver.systemRoot, "agent", "profiles", "builtin", "writer.home", "references"),
-            path.join(assetResolver.userRoot, "agent", "profiles", "builtin", "writer.home", "references"),
         ]);
     const referenceFiles = await listMergedWritingReferenceFiles(roots);
     const references: WritingReferenceDefinition[] = [];

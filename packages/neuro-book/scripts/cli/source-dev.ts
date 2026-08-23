@@ -4,7 +4,6 @@ import {existsSync} from "node:fs";
 import {homedir} from "node:os";
 import {resolve} from "node:path";
 import {spawnOwnedProcess, type OwnedProcessCompletion} from "@notnotype/owned-process";
-import {shutdownNativeProduct} from "nbook/server/runtime/shutdown/product-shutdown-client";
 import {
     PRODUCT_RUNTIME_EXIT_CODE_AGENT_SESSION_STORE_LEASE_COMPROMISED,
     PRODUCT_SHUTDOWN_TOKEN_ENVIRONMENT,
@@ -107,7 +106,6 @@ export async function runSourceDev(options: SourceDevOptions = {}): Promise<numb
     const completion = lease.completion.then(productExit);
     let signalCount = 0;
     let shutdownPromise: Promise<"forced"> | null = null;
-    let forcedShutdownPromise: Promise<"forced"> | null = null;
     let rejectShutdownFailure!: (error: unknown) => void;
     const shutdownFailure = new Promise<never>((_resolve, reject) => {
         rejectShutdownFailure = reject;
@@ -118,19 +116,15 @@ export async function runSourceDev(options: SourceDevOptions = {}): Promise<numb
         if (signalCount === 1) {
             shutdownPromise = lease.terminate("shutdown").then(() => "forced" as const);
             void shutdownPromise.catch(rejectShutdownFailure);
-            return;
         }
-        if (!forcedShutdownPromise) {
-            forcedShutdownPromise = lease.terminate("shutdown").then(() => "forced" as const);
-            void forcedShutdownPromise.catch(rejectShutdownFailure);
-        }
+        // 后续信号保持幂等：首次 terminate 已在途，重复调用没有 graceful/force 区分，避免重复终止。
     };
     process.on("SIGINT", requestShutdown);
     process.on("SIGTERM", requestShutdown);
 
     try {
         const result = await Promise.race([lease.completion, shutdownFailure]);
-        const requestedShutdown = forcedShutdownPromise ?? shutdownPromise;
+        const requestedShutdown = shutdownPromise;
         if (requestedShutdown) {
             await requestedShutdown;
             const terminal = await completion;
