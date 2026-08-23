@@ -8,8 +8,9 @@ import {resolveStateDatabaseUrl} from "#manager/config";
 import {writeTextAtomic} from "#manager/files";
 import {statePort} from "#manager/health";
 import {commandAvailable, run, runCapture} from "#manager/process";
-import type {CommandInspection, ContainerEngine, InstallProfile, ProductComponent} from "#manager/types";
-import {resolveAppSqliteLocation} from "nbook/server/runtime/app-sqlite-location";
+import type {CommandInspection} from "#manager/types";
+import type {ContainerEngine, InstallProfile, ProductComponent} from "@notnotype/neuro-book-contracts/installation";
+import {resolveAppSqliteLocation} from "#manager/app-sqlite-location";
 
 const ComposeSchema = Type.Object({
     services: Type.Object({
@@ -347,7 +348,7 @@ export async function buildSourceDockerImage(engine: ContainerEngine, sourceRoot
     await run(engine, [
         "build",
         "--file",
-        join(sourceRoot, "Dockerfile"),
+        join(sourceRoot, "packages", "neuro-book", "Dockerfile"),
         "--build-arg",
         `NEURO_BOOK_SOURCE_REVISION=${revision}`,
         "--tag",
