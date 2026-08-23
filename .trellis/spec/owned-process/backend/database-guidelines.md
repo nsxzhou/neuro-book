@@ -46,6 +46,6 @@ function armWatchdog(message: string, waitMs: number): void {
 
 ## Common Mistakes
 
-- 把进程管理当数据库或进程注册表：Task 117 明确拒绝按进程名/命令行/ParentProcessId 扫描或写 PID 文件来「查询」进程（见 `docs/tasks/117-windows-process-tree-lifecycle/README.md` 的 Rejected Approaches）。所有权必须在 spawn 之前建立（Windows 先建 Job 再启动目标），不能事后枚举。
+- 把进程管理当数据库或进程注册表：Task 117 明确拒绝按进程名/命令行/ParentProcessId 扫描或写 PID 文件来「查询」进程（见 `.agents/tasks/117-windows-process-tree-lifecycle/README.md` 的 Rejected Approaches）。所有权必须在 spawn 之前建立（Windows 先建 Job 再启动目标），不能事后枚举。
 - 在包内引入持久化或全局状态：本包每次调用都是独立 lease，不跨 invocation 保留状态；监督器不写 PID 文件、不重绑。
 - 把其它层（`scripts/db/`、Prisma）的数据库约定误带入本包：本包无数据库，数据库相关改动应放在消费方（server/ 等）。

@@ -47,6 +47,6 @@ console.log(JSON.stringify({status: "passed", bash, runtime: process.execPath}))
 
 ## What NOT to Log
 
-- 本包/消费方不记录目标进程的完整 argv、环境变量、shutdown token 或正文。先例：Task 117 的 `runtime.lease` 只保存最小版本化诊断 JSON（lease ID、PID、时间、Bun/Node 版本），明确「不记录 argv、环境、token、cwd 或正文」（`docs/tasks/117-windows-process-tree-lifecycle/README.md`）。
+- 本包/消费方不记录目标进程的完整 argv、环境变量、shutdown token 或正文。先例：Task 117 的 `runtime.lease` 只保存最小版本化诊断 JSON（lease ID、PID、时间、Bun/Node 版本），明确「不记录 argv、环境、token、cwd 或正文」（`.agents/tasks/117-windows-process-tree-lifecycle/README.md`）。
 - 不把目标 stdout/stderr 误当日志：它们是产品输出，按 `OwnedProcessSpec.stdio` 合同处理，不进入本包的日志面。
 - 不记录 PII / 密钥：本包无此类数据面，消费方同样遵守仓库规则。
