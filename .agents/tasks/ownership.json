@@ -4811,6 +4811,11 @@
           "path": "98-leader-assets-profile-reshape/README.md",
           "legacyDestination": ".agents/tasks/98-leader-assets-profile-reshape/README.md",
           "sha256": "sha256:215eaf38d7bec951ba9f82b899fd6845511d177078046f95d79c4994f7151186"
+        },
+        {
+          "path": "98-leader-assets-profile-reshape/walkthroughs/2026-08-21-writer-profile-home-sync.md",
+          "legacyDestination": ".agents/tasks/98-leader-assets-profile-reshape/walkthroughs/2026-08-21-writer-profile-home-sync.md",
+          "sha256": "sha256:a2bb4974d6c3e7d737cad9f90d78d84ab8c4ebee6e84c4b3158b858045c91b0c"
         }
       ]
     },
