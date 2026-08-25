@@ -91,6 +91,9 @@ export async function runSourceDev(options: SourceDevOptions = {}): Promise<numb
         [PRODUCT_SHUTDOWN_TOKEN_ENVIRONMENT]: token,
     };
     const port = sourceDevPort(env);
+    // 钉住子进程端口：否则计算出的默认端口不会生效，nuxt dev 会用自己的默认值。
+    env.NUXT_PORT = String(port);
+    env.PORT = String(port);
     const lease = spawnOwnedProcess({
         command: process.execPath,
         args: ["--no-install", "run", "dev:runtime"],
@@ -140,9 +143,9 @@ export async function runSourceDev(options: SourceDevOptions = {}): Promise<numb
     }
 }
 
-/** Source Dev 继续沿用 Nuxt 的 NUXT_PORT/PORT/default 解析顺序。 */
+/** Source Dev 继续沿用 Nuxt 的 NUXT_PORT/PORT 解析顺序；未设置时默认 3101（3000 常被本机其他服务占用）。 */
 function sourceDevPort(env: NodeJS.ProcessEnv): number {
-    const raw = env.NUXT_PORT?.trim() || env.PORT?.trim() || "3000";
+    const raw = env.NUXT_PORT?.trim() || env.PORT?.trim() || "3101";
     const port = Number(raw);
     if (!Number.isInteger(port) || port < 1 || port > 65_535) {
         throw new Error(`Source Dev端口无效：${raw}`);

@@ -1,6 +1,6 @@
 import {setTimeout as delay} from "node:timers/promises";
 
-const defaultBaseUrl = "http://127.0.0.1:3000";
+const defaultBaseUrl = "http://127.0.0.1:3101";
 const baseUrl = (process.argv[2] || process.env.NUXT_WARMUP_BASE_URL || defaultBaseUrl).replace(/\/$/, "");
 const timeoutMs = Number.parseInt(process.env.NUXT_WARMUP_TIMEOUT_MS || "60000", 10);
 
