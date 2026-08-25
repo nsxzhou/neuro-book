@@ -2,7 +2,7 @@
   "schema": "nbook.task-ownership/v1",
   "ownerRoot": "packages/neuro-book/.agents/tasks",
   "taskCount": 91,
-  "fileCount": 855,
+  "fileCount": 856,
   "tasks": [
     {
       "taskId": "01-agent-roleplay-mode",
